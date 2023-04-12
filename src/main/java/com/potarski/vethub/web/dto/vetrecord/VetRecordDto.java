@@ -18,10 +18,10 @@ public class VetRecordDto {
 
     @NotNull(message = "Record name must be not null", groups = {OnCreate.class, OnUpdate.class})
     @Length(max = 255, message = "Name must be less than 255 symbols", groups = {OnCreate.class, OnUpdate.class})
-    private String recordName;
+    private String title;
 
     @Length(max = 255, message = "Name must be less than 255 symbols", groups = {OnCreate.class, OnUpdate.class})
-    private String recordDescription;
+    private String description;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(pattern = "yyyy.MM.dd")

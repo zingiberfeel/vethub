@@ -14,8 +14,8 @@ public class VetRecordRowMapper {
         if (resultSet.next()){
             VetRecord vetRecord = new VetRecord();
             vetRecord.setId(resultSet.getLong("record_id"));
-            vetRecord.setRecordName(resultSet.getString("record_name"));
-            vetRecord.setRecordDescription(resultSet.getString("record_description"));
+            vetRecord.setTitle(resultSet.getString("record_name"));
+            vetRecord.setDescription(resultSet.getString("record_description"));
             return vetRecord;
         }
         return null;
@@ -26,8 +26,8 @@ public class VetRecordRowMapper {
         while (resultSet.next()){
             VetRecord vetRecord = new VetRecord();
             vetRecord.setId(resultSet.getLong("record_id"));
-            vetRecord.setRecordName(resultSet.getString("record_name"));
-            vetRecord.setRecordDescription(resultSet.getString("record_description"));
+            vetRecord.setTitle(resultSet.getString("record_name"));
+            vetRecord.setDescription(resultSet.getString("record_description"));
             vetRecords.add(vetRecord);
         }
         return vetRecords;

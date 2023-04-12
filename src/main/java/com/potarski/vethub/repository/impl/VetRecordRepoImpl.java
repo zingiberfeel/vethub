@@ -131,8 +131,8 @@ public class VetRecordRepoImpl implements VetRecordRepo {
         try {
             Connection connection = dataSourceConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
-            preparedStatement.setString(1, vetRecord.getRecordName());
-            preparedStatement.setString(2, vetRecord.getRecordDescription());
+            preparedStatement.setString(1, vetRecord.getTitle());
+            preparedStatement.setString(2, vetRecord.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -144,8 +144,8 @@ public class VetRecordRepoImpl implements VetRecordRepo {
         try {
             Connection connection = dataSourceConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE, PreparedStatement.RETURN_GENERATED_KEYS); // Должны засетать айдишник в record, поэтому возвращаем ключи
-            preparedStatement.setString(1, vetRecord.getRecordName());
-            preparedStatement.setString(2, vetRecord.getRecordDescription());
+            preparedStatement.setString(1, vetRecord.getTitle());
+            preparedStatement.setString(2, vetRecord.getDescription());
             preparedStatement.executeUpdate();
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 rs.next();

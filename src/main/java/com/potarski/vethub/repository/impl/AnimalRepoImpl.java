@@ -72,13 +72,14 @@ public class AnimalRepoImpl implements AnimalRepo {
     public Optional<Animal> findById(Long id) {
         try {
             Connection connection = dataSourceConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             preparedStatement.setLong(1, id);
             try(ResultSet rs = preparedStatement.executeQuery()) {
                 return Optional.ofNullable(AnimalRowMapper.mapRow(rs));
             }
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Error while finding animal by id");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 
@@ -86,7 +87,8 @@ public class AnimalRepoImpl implements AnimalRepo {
     public List<Animal> findAllByUserId(Long userId) {
         try {
             Connection connection = dataSourceConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_USER_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_USER_ID, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
             preparedStatement.setLong(1, userId);
             try(ResultSet rs = preparedStatement.executeQuery()) {
                 return AnimalRowMapper.mapRows(rs);
@@ -105,7 +107,7 @@ public class AnimalRepoImpl implements AnimalRepo {
             preparedStatement.setLong(2, userId);
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Error while finding animal by id");
+            throw new ResourceMappingException("Error while assigning animal by id");
         }
     }
 
@@ -114,9 +116,9 @@ public class AnimalRepoImpl implements AnimalRepo {
         try {
             Connection connection = dataSourceConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
-            preparedStatement.setString(1, animal.getAnimalName());
-            preparedStatement.setString(2, animal.getAnimalKind());
-            preparedStatement.setDate(3, animal.getAnimalBirthDate());
+            preparedStatement.setString(1, animal.getNickname());
+            preparedStatement.setString(2, animal.getKind());
+            preparedStatement.setString(3, animal.getBirthday().toString());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new ResourceMappingException("Error while updating animal");
@@ -128,9 +130,9 @@ public class AnimalRepoImpl implements AnimalRepo {
         try {
             Connection connection = dataSourceConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE, PreparedStatement.RETURN_GENERATED_KEYS); // Должны засетать айдишник в animal, поэтому возвращаем ключи
-            preparedStatement.setString(1, animal.getAnimalName());
-            preparedStatement.setString(2, animal.getAnimalKind());
-            preparedStatement.setDate(3, animal.getAnimalBirthDate());
+            preparedStatement.setString(1, animal.getNickname());
+            preparedStatement.setString(2, animal.getKind());
+            preparedStatement.setDate(3, animal.getBirthday());
             preparedStatement.executeUpdate();
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 rs.next();

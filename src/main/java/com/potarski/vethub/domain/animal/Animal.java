@@ -6,15 +6,16 @@ import lombok.Data;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Data
 public class Animal {
 
     private Long id;
-    private String animalName;
-    private String animalKind;
-    private Date animalBirthDate;
+    private String nickname;
+    private String kind;
+    private Date birthday;
     private String pictureFilePath; // фотография животного
     private List<VetRecord> vetRecords;
 }

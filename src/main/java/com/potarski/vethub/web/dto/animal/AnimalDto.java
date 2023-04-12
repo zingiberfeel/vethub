@@ -7,6 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.GregorianCalendar;
+
 @Data
 public class AnimalDto {
     @NotNull(message = "Id must be not null", groups = OnUpdate.class)
@@ -14,15 +18,14 @@ public class AnimalDto {
 
     @NotNull(message = "Animal name must not be null", groups = {OnUpdate.class, OnCreate.class})
     @Length(max = 256, message = "Animal name must be less than 256 symbols")
-    private String animalName;
+    private String nickname;
 
     @NotNull(message = "Animal kind must not be null", groups = {OnUpdate.class, OnCreate.class})
     @Length(max = 256, message = "Animal kind must be less than 256 symbols")
-    private String animalKind;
+    private String kind;
 
     @NotNull(message = "Animal age must not be null", groups = {OnUpdate.class, OnCreate.class})
-    @Min(0)
-    private int animalAge;
+    private Date birthday;
 
     private String pictureFilePath; // фотография животного
 }

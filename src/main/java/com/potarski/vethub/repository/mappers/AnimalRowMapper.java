@@ -17,9 +17,9 @@ public class AnimalRowMapper {
         if(resultSet.next()){
             Animal animal = new Animal();
             animal.setId(resultSet.getLong("animal_id"));
-            animal.setAnimalName(resultSet.getString("animal_name"));
-            animal.setAnimalKind(resultSet.getString("animal_kind"));
-            animal.setAnimalBirthDate(resultSet.getDate("animal_birthdate"));
+            animal.setNickname(resultSet.getString("animal_name"));
+            animal.setKind(resultSet.getString("animal_kind"));
+            animal.setBirthday(resultSet.getDate("animal_birthdate"));
             animal.setVetRecords(vetRecords);
             return animal;
         }
@@ -34,9 +34,9 @@ public class AnimalRowMapper {
         while(resultSet.next()){
             Animal animal = new Animal();
             animal.setId(resultSet.getLong("animal_id"));
-            animal.setAnimalName(resultSet.getString("animal_name"));
-            animal.setAnimalKind(resultSet.getString("animal_kind"));
-            animal.setAnimalBirthDate(resultSet.getDate("animal_birthdate"));
+            animal.setNickname(resultSet.getString("animal_name"));
+            animal.setKind(resultSet.getString("animal_kind"));
+            animal.setBirthday(resultSet.getDate("animal_birthdate"));
             animal.setVetRecords(vetRecords);
             animals.add(animal);
             return animals;

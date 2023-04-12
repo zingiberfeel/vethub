@@ -9,11 +9,9 @@ public class VetRecord {
 
     private Long id;
 
-    private String recordName;
+    private String title;
 
-    private String recordDescription;
-
-    private Animal animal;
+    private String description;
 
     private LocalDateTime timestamp;
 
