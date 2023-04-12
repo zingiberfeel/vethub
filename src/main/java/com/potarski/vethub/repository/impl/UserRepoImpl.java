@@ -30,6 +30,7 @@ public class UserRepoImpl implements UserRepo {
                    a.name            as animal_name,
                    a.kind            as animal_kind,
                    a.birthdate       as animal_birthdate,
+                   v.id              as record_id,
                    v.name            as record_name,
                    v.description     as record_description,
                    v.date            as record_date
@@ -54,6 +55,7 @@ public class UserRepoImpl implements UserRepo {
                    a.name            as animal_name,
                    a.kind            as animal_kind,
                    a.birthdate       as animal_birthdate,
+                   v.id              as record_id,
                    v.name            as record_name,
                    v.description     as record_description,
                    v.date            as record_date
