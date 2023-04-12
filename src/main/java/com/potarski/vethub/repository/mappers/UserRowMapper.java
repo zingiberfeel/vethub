@@ -17,7 +17,7 @@ public class UserRowMapper {
     public static User mapRow(ResultSet resultSet) {
         Set<Role> roles = new HashSet<>();
         while (resultSet.next()) {
-            roles.add(Role.valueOf(resultSet.getString("user_role_role")));
+            roles.add(Role.valueOf(resultSet.getString("user_role")));
         }
         resultSet.beforeFirst();
         List<Animal> animals = AnimalRowMapper.mapRows(resultSet);
