@@ -7,6 +7,7 @@ import com.potarski.vethub.service.UserService;
 import com.potarski.vethub.service.props.JwtProperties;
 import com.potarski.vethub.web.dto.auth.JwtResponse;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -89,13 +90,20 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
-        Jws<Claims> claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
-        return !claims.getBody().getExpiration().before(new Date());
+        try {
+            Jws<Claims> claims = Jwts
+                    .parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (IllegalArgumentException | io.jsonwebtoken.security.SignatureException ex) {
+            throw new IllegalArgumentException("Invalid token", ex);
+        } catch (ExpiredJwtException ex) {
+            throw new IllegalArgumentException("Token expired", ex);
+        }
     }
+
 
     private String getId(String token) {
         return Jwts
@@ -123,5 +131,4 @@ public class JwtTokenProvider {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-
 }

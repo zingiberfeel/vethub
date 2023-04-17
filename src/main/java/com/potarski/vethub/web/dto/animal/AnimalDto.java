@@ -1,17 +1,21 @@
 package com.potarski.vethub.web.dto.animal;
 
+import com.potarski.vethub.domain.animal.VetRecord;
 import com.potarski.vethub.web.dto.validation.OnCreate;
 import com.potarski.vethub.web.dto.validation.OnUpdate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class AnimalDto {
     @NotNull(message = "Id must be not null", groups = OnUpdate.class)
     private Long id;
@@ -27,5 +31,5 @@ public class AnimalDto {
     @NotNull(message = "Animal age must not be null", groups = {OnUpdate.class, OnCreate.class})
     private Date birthday;
 
-    private String pictureFilePath; // фотография животного
+    private List<VetRecord> vetRecords;
 }

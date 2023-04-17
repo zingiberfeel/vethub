@@ -39,7 +39,6 @@ public class AnimalRowMapper {
             animal.setBirthday(resultSet.getDate("animal_birthdate"));
             animal.setVetRecords(vetRecords);
             animals.add(animal);
-            return animals;
         }
         return animals;
     }

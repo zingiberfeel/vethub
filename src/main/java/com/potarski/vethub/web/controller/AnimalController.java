@@ -47,6 +47,7 @@ public class AnimalController {
 
     @PostMapping("/{id}/records")
     public VetRecordDto createRecord(@PathVariable Long id, @Validated(OnCreate.class) @RequestBody VetRecordDto vetRecordDto){
+        System.out.println("Received request to create record for animal with ID " + id);
         VetRecord vetRecord = vetRecordMapper.toEntity(vetRecordDto);
         VetRecord createdVetRecord = vetRecordService.create(vetRecord, id);
         return vetRecordMapper.toDto(createdVetRecord);
