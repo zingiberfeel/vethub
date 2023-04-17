@@ -28,7 +28,8 @@ public class AnimalRepoImpl implements AnimalRepo {
                    a.birthdate       as animal_birthdate,
                    v.id              as record_id,
                    v.name            as record_name,
-                   v.description     as record_description
+                   v.description     as record_description,
+                   v.date            as record_date
             FROM animals a
                      LEFT JOIN animals_vetrecords av on a.id = av.animal_id
                      LEFT JOIN vetrecords v on av.record_id = v.id
@@ -41,7 +42,8 @@ public class AnimalRepoImpl implements AnimalRepo {
                    a.birthdate       as animal_birthdate,
                    v.id              as record_id,
                    v.name            as record_name,
-                   v.description     as record_description
+                   v.description     as record_description,
+                   v.date            as record_date
             FROM animals a
                      JOIN users_animals ua on a.id = ua.animal_id
                      LEFT JOIN animals_vetrecords av on a.id = av.animal_id
@@ -94,7 +96,7 @@ public class AnimalRepoImpl implements AnimalRepo {
                 return AnimalRowMapper.mapRows(rs);
             }
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Error while finding all animals by user id");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 

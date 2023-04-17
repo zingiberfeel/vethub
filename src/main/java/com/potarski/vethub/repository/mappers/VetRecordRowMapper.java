@@ -16,6 +16,7 @@ public class VetRecordRowMapper {
             vetRecord.setId(resultSet.getLong("record_id"));
             vetRecord.setTitle(resultSet.getString("record_name"));
             vetRecord.setDescription(resultSet.getString("record_description"));
+            vetRecord.setTimestamp(resultSet.getTimestamp("record_date").toLocalDateTime());
             return vetRecord;
         }
         return null;
@@ -28,6 +29,7 @@ public class VetRecordRowMapper {
             vetRecord.setId(resultSet.getLong("record_id"));
             vetRecord.setTitle(resultSet.getString("record_name"));
             vetRecord.setDescription(resultSet.getString("record_description"));
+            vetRecord.setTimestamp(resultSet.getTimestamp("record_date").toLocalDateTime());
             vetRecords.add(vetRecord);
         }
         return vetRecords;

@@ -6,7 +6,9 @@ import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnimalRowMapper {
 
@@ -40,6 +42,19 @@ public class AnimalRowMapper {
             animal.setVetRecords(vetRecords);
             animals.add(animal);
         }
-        return animals;
+        List<Animal> uniqueAnimals = animals.stream()
+                .map(animal -> new Animal(
+                        animal.getId(),
+                        animal.getNickname(),
+                        animal.getKind(),
+                        animal.getBirthday(),
+                        animal.getVetRecords().stream()
+                                .sorted(Comparator.comparing(VetRecord::getTimestamp))
+                                .distinct()
+                                .collect(Collectors.toList())))
+                .distinct()
+                .collect(Collectors.toList());
+
+        return uniqueAnimals;
     }
 }

@@ -23,7 +23,8 @@ public class VetRecordRepoImpl implements VetRecordRepo {
     private final String FIND_BY_ID = """
             SELECT v.id              as record_id,
                    v.name            as record_name,
-                   v.description     as record_description
+                   v.description     as record_description,
+                   v.date            as record_date
             FROM vetrecords v
             WHERE v.id = ?
             """;
@@ -31,7 +32,9 @@ public class VetRecordRepoImpl implements VetRecordRepo {
     private final String FIND_ALL_BY_ANIMAL_ID = """
             SELECT v.id              as record_id,
                    v.name            as record_name,
-                   v.description     as record_description
+                   v.description     as record_description,
+                   v.date            as record_date
+            
             FROM vetrecords v
                      LEFT JOIN animals_vetrecords av on v.id = av.record_id
                      LEFT JOIN animals a on a.id = av.animal_id
@@ -41,7 +44,8 @@ public class VetRecordRepoImpl implements VetRecordRepo {
     private final String FIND_ALL_BY_USER_ID = """
             SELECT v.id              as record_id,
                    v.name            as record_name,
-                   v.description     as record_description
+                   v.description     as record_description,
+                   v.date            as record_date
             FROM vetrecords v
                      LEFT JOIN animals_vetrecords av on v.id = av.record_id
                      LEFT JOIN users_animals ua on av.animal_id = ua.animal_id
@@ -57,13 +61,14 @@ public class VetRecordRepoImpl implements VetRecordRepo {
     private final String UPDATE = """
             UPDATE vetrecords
             SET name = ?,
-                description = ?
+                description = ?,
+                date = ?
             WHERE id = ?
             """;
 
     private final String CREATE = """
-            INSERT INTO vetrecords (id, name, description)
-            VALUES (?, ?, ?)
+            INSERT INTO vetrecords (id, name, description, date)
+            VALUES (?, ?, ?, ?)
             """;
 
     private final String DELETE = """
@@ -133,6 +138,7 @@ public class VetRecordRepoImpl implements VetRecordRepo {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
             preparedStatement.setString(1, vetRecord.getTitle());
             preparedStatement.setString(2, vetRecord.getDescription());
+            preparedStatement.setObject(3, vetRecord.getTimestamp());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -146,6 +152,7 @@ public class VetRecordRepoImpl implements VetRecordRepo {
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE, PreparedStatement.RETURN_GENERATED_KEYS); // Должны засетать айдишник в record, поэтому возвращаем ключи
             preparedStatement.setString(1, vetRecord.getTitle());
             preparedStatement.setString(2, vetRecord.getDescription());
+            preparedStatement.setObject(3, vetRecord.getTimestamp());
             preparedStatement.executeUpdate();
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 rs.next();
