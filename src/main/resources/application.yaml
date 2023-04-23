@@ -13,7 +13,17 @@ spring:
 
 security:
   jwt:
-    secret: aGZiYmtiYWllYmNpZWFpZWJsZWNldWNlY2xhZWNhaWJlbGNhZWN3Q0VCV0VXSUM=
-    access: 3600000
+ #   secret: aGZiYmtiYWllYmNpZWFpZWJsZWNldWNlY2xhZWNhaWJlbGNhZWN3Q0VCV0VXSUM=
+    secret: QVdEQURXQURXQURBV0RXQURBV0RTQURDWlhDWFpDWFpDQVdEQVdEQVdEU0FDWFpDWkFXREFXREFTQ1haQ1haQ0FXREFTQUNaQw
+    access: 2592000000 #3600000
     refresh: 2592000000
 
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core: TRACE
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG

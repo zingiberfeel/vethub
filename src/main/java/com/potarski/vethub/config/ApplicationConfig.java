@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +36,22 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Configuration
+    public class RequestLoggingFilterConfig {
+
+        @Bean
+        public CommonsRequestLoggingFilter logFilter() {
+            CommonsRequestLoggingFilter filter
+                    = new CommonsRequestLoggingFilter();
+            filter.setIncludeQueryString(true);
+            filter.setIncludePayload(true);
+            filter.setMaxPayloadLength(10000);
+            filter.setIncludeHeaders(false);
+            filter.setAfterMessagePrefix("REQUEST DATA: ");
+            return filter;
+        }
     }
 
     @Bean

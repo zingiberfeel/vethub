@@ -8,10 +8,7 @@ import com.potarski.vethub.repository.mappers.AnimalRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,10 +117,11 @@ public class AnimalRepoImpl implements AnimalRepo {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
             preparedStatement.setString(1, animal.getNickname());
             preparedStatement.setString(2, animal.getKind());
-            preparedStatement.setString(3, animal.getBirthday().toString());
+            preparedStatement.setDate(3, Date.valueOf(animal.getBirthday()));
+            preparedStatement.setLong(4, animal.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Error while updating animal");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 
@@ -134,14 +132,14 @@ public class AnimalRepoImpl implements AnimalRepo {
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE, PreparedStatement.RETURN_GENERATED_KEYS); // Должны засетать айдишник в animal, поэтому возвращаем ключи
             preparedStatement.setString(1, animal.getNickname());
             preparedStatement.setString(2, animal.getKind());
-            preparedStatement.setDate(3, animal.getBirthday());
+            preparedStatement.setDate(3, Date.valueOf(animal.getBirthday()));
             preparedStatement.executeUpdate();
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 rs.next();
                 animal.setId(rs.getLong(1));
             }
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Error while creating animal");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 

@@ -67,8 +67,8 @@ public class VetRecordRepoImpl implements VetRecordRepo {
             """;
 
     private final String CREATE = """
-            INSERT INTO vetrecords (id, name, description, date)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO vetrecords (name, description, date)
+            VALUES (?, ?, ?)
             """;
 
     private final String DELETE = """
@@ -108,7 +108,7 @@ public class VetRecordRepoImpl implements VetRecordRepo {
     public List<VetRecord> findAllByUserId(Long userId) {
         try {
             Connection connection = dataSourceConfig.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_USER_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_USER_ID, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             preparedStatement.setLong(1, userId);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 return VetRecordRowMapper.mapRows(resultSet);
@@ -123,8 +123,8 @@ public class VetRecordRepoImpl implements VetRecordRepo {
         try {
             Connection connection = dataSourceConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(ASSIGN);
-            preparedStatement.setLong(1, recordId);
-            preparedStatement.setLong(2, animalId);
+            preparedStatement.setLong(2, recordId);
+            preparedStatement.setLong(1, animalId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -139,6 +139,7 @@ public class VetRecordRepoImpl implements VetRecordRepo {
             preparedStatement.setString(1, vetRecord.getTitle());
             preparedStatement.setString(2, vetRecord.getDescription());
             preparedStatement.setObject(3, vetRecord.getTimestamp());
+            preparedStatement.setLong(4, vetRecord.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -159,7 +160,7 @@ public class VetRecordRepoImpl implements VetRecordRepo {
                 vetRecord.setId(rs.getLong(1));
             }
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Error while creating animal");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 

@@ -17,6 +17,7 @@ import com.potarski.vethub.web.mappers.VetRecordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class UserController {
 
     @PostMapping("{id}/animals")
     public AnimalDto createAnimal(@PathVariable Long id,
-                                  @Validated(OnCreate.class) @RequestBody AnimalDto animalDto){
+                                  @Validated(OnCreate.class) @RequestBody AnimalDto animalDto) {
         Animal animal = animalMapper.toEntity(animalDto);
         Animal createdAnimal = animalService.create(animal, id);
         return animalMapper.toDto(createdAnimal);

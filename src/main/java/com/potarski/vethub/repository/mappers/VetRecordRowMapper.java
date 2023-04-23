@@ -4,8 +4,10 @@ import com.potarski.vethub.domain.animal.VetRecord;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VetRecordRowMapper {
 
@@ -16,7 +18,10 @@ public class VetRecordRowMapper {
             vetRecord.setId(resultSet.getLong("record_id"));
             vetRecord.setTitle(resultSet.getString("record_name"));
             vetRecord.setDescription(resultSet.getString("record_description"));
-            vetRecord.setTimestamp(resultSet.getTimestamp("record_date").toLocalDateTime());
+            Timestamp timestamp = resultSet.getTimestamp("record_date");
+            if (timestamp != null) {
+                vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
+            }
             return vetRecord;
         }
         return null;
@@ -24,14 +29,27 @@ public class VetRecordRowMapper {
     @SneakyThrows
     public static List<VetRecord> mapRows(ResultSet resultSet) {
         List<VetRecord> vetRecords = new ArrayList<>();
+        resultSet.beforeFirst();
         while (resultSet.next()){
             VetRecord vetRecord = new VetRecord();
             vetRecord.setId(resultSet.getLong("record_id"));
             vetRecord.setTitle(resultSet.getString("record_name"));
             vetRecord.setDescription(resultSet.getString("record_description"));
-            vetRecord.setTimestamp(resultSet.getTimestamp("record_date").toLocalDateTime());
+            Timestamp timestamp = resultSet.getTimestamp("record_date");
+            if (timestamp != null) {
+                vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
+            }
             vetRecords.add(vetRecord);
+            System.out.println(vetRecords);
         }
-        return vetRecords;
+        return vetRecords.stream()
+                .map(vetRecord -> new VetRecord(
+                        vetRecord.getId(),
+                        vetRecord.getTitle(),
+                        vetRecord.getDescription(),
+                        vetRecord.getTimestamp()
+                ))
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

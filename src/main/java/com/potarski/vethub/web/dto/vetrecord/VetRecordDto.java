@@ -9,6 +9,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,8 +24,6 @@ public class VetRecordDto {
     @Length(max = 255, message = "Name must be less than 255 symbols", groups = {OnCreate.class, OnUpdate.class})
     private String description;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    @JsonFormat(pattern = "yyyy.MM.dd")
-    private LocalDateTime timestamp;
+    private LocalDate timestamp;
 
 }

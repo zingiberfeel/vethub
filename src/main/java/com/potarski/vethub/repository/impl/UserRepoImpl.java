@@ -223,7 +223,7 @@ public class UserRepoImpl implements UserRepo {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Exception while deleting user.");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 

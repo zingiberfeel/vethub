@@ -19,6 +19,6 @@ public class Animal {
     private Long id;
     private String nickname;
     private String kind;
-    private Date birthday;
+    private LocalDate birthday;
     private List<VetRecord> vetRecords;
 }
