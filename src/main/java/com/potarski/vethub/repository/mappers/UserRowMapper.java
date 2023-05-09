@@ -25,14 +25,13 @@ public class UserRowMapper {
         List<VetRecord> vetRecords = VetRecordRowMapper.mapRows(resultSet);
         resultSet.beforeFirst();
         if (resultSet.next()) {
-            User user = new User();
-            user.setId(resultSet.getLong("user_id"));
-            user.setUsername(resultSet.getString("user_username"));
-            user.setPassword(resultSet.getString("user_password"));
-            user.setRoles(roles);
-            user.setAnimals(animals);
-            user.setVetRecords(vetRecords);
-            return user;
+            return User.builder()
+                    .id(resultSet.getLong("user_id"))
+                    .username(resultSet.getString("user_username"))
+                    .password(resultSet.getString("user_password"))
+                    .roles(roles)
+                    .animals(animals)
+                    .vetRecords(vetRecords).build();
         }
         return null;
     }

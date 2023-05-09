@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.potarski.vethub.web.dto.validation.OnCreate;
 import com.potarski.vethub.web.dto.validation.OnUpdate;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 
 @Data
+@Builder
 public class UserDto {
 
     @NotNull(message = "Id must be not null", groups = OnUpdate.class) // мы не знаем, какой айди будет у пользователя при создании, но при обновлении мы точно не хотим зарядить null

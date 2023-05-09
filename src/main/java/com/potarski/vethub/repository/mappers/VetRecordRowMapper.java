@@ -6,14 +6,16 @@ import lombok.SneakyThrows;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class VetRecordRowMapper {
 
     @SneakyThrows
-    public static VetRecord mapRow(ResultSet resultSet){
-        if (resultSet.next()){
+    public static VetRecord mapRow(ResultSet resultSet) {
+
+        if (resultSet.next()) {
             VetRecord vetRecord = new VetRecord();
             vetRecord.setId(resultSet.getLong("record_id"));
             vetRecord.setTitle(resultSet.getString("record_name"));
@@ -26,30 +28,26 @@ public class VetRecordRowMapper {
         }
         return null;
     }
+
     @SneakyThrows
     public static List<VetRecord> mapRows(ResultSet resultSet) {
         List<VetRecord> vetRecords = new ArrayList<>();
         resultSet.beforeFirst();
-        while (resultSet.next()){
-            VetRecord vetRecord = new VetRecord();
-            vetRecord.setId(resultSet.getLong("record_id"));
-            vetRecord.setTitle(resultSet.getString("record_name"));
-            vetRecord.setDescription(resultSet.getString("record_description"));
-            Timestamp timestamp = resultSet.getTimestamp("record_date");
-            if (timestamp != null) {
-                vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
-            }
-            vetRecords.add(vetRecord);
-            System.out.println(vetRecords);
+        while (resultSet.next()) {
+            long vetRecordId = resultSet.getLong("record_id");
+            if (vetRecordId != 0) {
+                VetRecord vetRecord = new VetRecord();
+                vetRecord.setId(vetRecordId);
+                vetRecord.setTitle(resultSet.getString("record_name"));
+                vetRecord.setDescription(resultSet.getString("record_description"));
+                Timestamp timestamp = resultSet.getTimestamp("record_date");
+                if (timestamp != null) {
+                    vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
+                }
+                vetRecords.add(vetRecord);
+            }}
+            return vetRecords.stream()
+                    .distinct()
+                    .collect(Collectors.toList());
         }
-        return vetRecords.stream()
-                .map(vetRecord -> new VetRecord(
-                        vetRecord.getId(),
-                        vetRecord.getTitle(),
-                        vetRecord.getDescription(),
-                        vetRecord.getTimestamp()
-                ))
-                .distinct()
-                .collect(Collectors.toList());
     }
-}
