@@ -20,4 +20,6 @@ public class VetRecord {
 
     private LocalDate timestamp;
 
+    private LocalDateTime reminder;
+
 }

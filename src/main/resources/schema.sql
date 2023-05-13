@@ -10,15 +10,15 @@ create table if not exists animals(
     id bigserial primary key,
     name varchar(255) not null,
     kind varchar(255) not null,
-    birthdate date not null,
-    picture_file_path varchar
-    );
+    birthdate date not null
+                                  );
 
 create table if not exists vetrecords(
     id bigserial primary key,
     name varchar(255),
     description varchar(255),
-    date timestamp not null
+    date timestamp not null,
+    reminder timestamp
     );
 
 create table if not exists users_animals(

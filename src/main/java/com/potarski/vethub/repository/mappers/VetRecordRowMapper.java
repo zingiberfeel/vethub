@@ -4,6 +4,7 @@ import com.potarski.vethub.domain.animal.VetRecord;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +22,12 @@ public class VetRecordRowMapper {
             vetRecord.setTitle(resultSet.getString("record_name"));
             vetRecord.setDescription(resultSet.getString("record_description"));
             Timestamp timestamp = resultSet.getTimestamp("record_date");
+            Timestamp reminder = resultSet.getTimestamp("record_reminder");
             if (timestamp != null) {
                 vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
+            }
+            if (reminder != null) {
+                vetRecord.setReminder(reminder.toLocalDateTime());
             }
             return vetRecord;
         }
@@ -41,8 +46,12 @@ public class VetRecordRowMapper {
                 vetRecord.setTitle(resultSet.getString("record_name"));
                 vetRecord.setDescription(resultSet.getString("record_description"));
                 Timestamp timestamp = resultSet.getTimestamp("record_date");
+                Timestamp reminder = resultSet.getTimestamp("record_reminder");
                 if (timestamp != null) {
                     vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
+                }
+                if (reminder != null) {
+                    vetRecord.setReminder(reminder.toLocalDateTime());
                 }
                 vetRecords.add(vetRecord);
             }}

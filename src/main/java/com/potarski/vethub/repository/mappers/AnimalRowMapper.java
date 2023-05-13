@@ -65,8 +65,12 @@ public class AnimalRowMapper {
                 vetRecord.setTitle(resultSet.getString("record_name"));
                 vetRecord.setDescription(resultSet.getString("record_description"));
                 Timestamp timestamp = resultSet.getTimestamp("record_date");
+                Timestamp reminder = resultSet.getTimestamp("record_reminder");
                 if (timestamp != null) {
                     vetRecord.setTimestamp(timestamp.toLocalDateTime().toLocalDate());
+                }
+                if (reminder != null) {
+                    vetRecord.setReminder(reminder.toLocalDateTime());
                 }
                 animal.getVetRecords().add(vetRecord);
             }

@@ -33,7 +33,8 @@ public class UserRepoImpl implements UserRepo {
                    v.id              as record_id,
                    v.name            as record_name,
                    v.description     as record_description,
-                   v.date            as record_date
+                   v.date            as record_date,
+                   v.reminder        as record_reminder
                         
             FROM users u
                         
@@ -58,7 +59,8 @@ public class UserRepoImpl implements UserRepo {
                    v.id              as record_id,
                    v.name            as record_name,
                    v.description     as record_description,
-                   v.date            as record_date
+                   v.date            as record_date,
+                   v.reminder        as record_reminder
                         
             FROM users u
                         
@@ -119,7 +121,7 @@ public class UserRepoImpl implements UserRepo {
                 return Optional.ofNullable(UserRowMapper.mapRow(rs));
             }
         } catch (SQLException throwables) {
-            throw new ResourceMappingException("Exception while finding user by id.");
+            throw new ResourceMappingException(throwables.getMessage());
         }
     }
 

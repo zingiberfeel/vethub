@@ -26,4 +26,6 @@ public class VetRecordDto {
 
     private LocalDate timestamp;
 
+    private LocalDateTime reminder;
+
 }
