@@ -1,10 +1,7 @@
 INSERT INTO vethub.users (username, password)
-VALUES ('john', '$2a$12$6htforEr47M4LVsqKBrQLurvI3Sk8A7upNo7FsKHUWuI7jWJrtoG6
-'),
-       ('jane', '$2a$12$6htforEr47M4LVsqKBrQLurvI3Sk8A7upNo7FsKHUWuI7jWJrtoG6
-'),
-       ('admin', '$2a$12$6htforEr47M4LVsqKBrQLurvI3Sk8A7upNo7FsKHUWuI7jWJrtoG6
-');
+VALUES ('john', '$2a$12$6htforEr47M4LVsqKBrQLurvI3Sk8A7upNo7FsKHUWuI7jWJrtoG6'),
+       ('jane', '$2a$12$6htforEr47M4LVsqKBrQLurvI3Sk8A7upNo7FsKHUWuI7jWJrtoG6'),
+       ('admin', '$2a$12$6htforEr47M4LVsqKBrQLurvI3Sk8A7upNo7FsKHUWuI7jWJrtoG6');
 
 
 INSERT INTO vethub.animals (name, kind, birthdate)
