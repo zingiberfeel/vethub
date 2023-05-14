@@ -15,6 +15,7 @@ import com.potarski.vethub.web.mappers.AnimalMapper;
 import com.potarski.vethub.web.mappers.UserMapper;
 import com.potarski.vethub.web.mappers.VetRecordMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -37,17 +38,20 @@ public class UserController {
     private final VetRecordMapper vetRecordMapper;
 
     @GetMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessData(#id)")
     public UserDto getById(@PathVariable Long id){
         User user = userService.getById(id);
         return userMapper.toDto(user);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessData(#id)")
     public void deleteById(@PathVariable Long id){
         userService.delete(id);
     }
 
     @PutMapping
+    @PreAuthorize("@customSecurityExpression.canAccessData(#userDto.id)")
     public UserDto update(@Validated(OnUpdate.class) @RequestBody UserDto userDto){
         User user = userMapper.toEntity(userDto);
         User updatedUser = userService.update(user);
@@ -55,12 +59,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}/animals")
+    @PreAuthorize("@customSecurityExpression.canAccessData(#id)")
     public List<AnimalDto> getAnimalsByUserId(@PathVariable Long id){
         List<Animal> animals = animalService.getAllByUserId(id);
         return animalMapper.toDto(animals);
     }
 
     @PostMapping("{id}/animals")
+    @PreAuthorize("@customSecurityExpression.canAccessData(#id)")
     public AnimalDto createAnimal(@PathVariable Long id,
                                   @Validated(OnCreate.class) @RequestBody AnimalDto animalDto) {
         Animal animal = animalMapper.toEntity(animalDto);
@@ -69,6 +75,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/records")
+    @PreAuthorize("@customSecurityExpression.canAccessData(#id)")
     public List<VetRecordDto> getRecordsByUserId(@PathVariable Long id){
         List<VetRecord> records = vetRecordService.getAllByUserId(id);
         return vetRecordMapper.toDto(records);

@@ -11,6 +11,7 @@ import com.potarski.vethub.web.dto.vetrecord.VetRecordDto;
 import com.potarski.vethub.web.mappers.AnimalMapper;
 import com.potarski.vethub.web.mappers.VetRecordMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,17 +27,20 @@ public class VetRecordController {
     private final AnimalMapper animalMapper;
 
     @GetMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessRecord(#id)")
     public VetRecordDto getById(@PathVariable Long id){
         VetRecord vetRecord = vetRecordService.getById(id);
         return vetRecordMapper.toDto(vetRecord);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessRecord(#id)")
     public void deleteById(@PathVariable Long id){
         vetRecordService.delete(id);
     }
 
     @PutMapping
+    @PreAuthorize("@customSecurityExpression.canAccessRecord(#vetRecordDto.id)")
     public VetRecordDto update(@Validated(OnUpdate.class) @RequestBody VetRecordDto vetRecordDto){
         VetRecord vetRecord = vetRecordMapper.toEntity(vetRecordDto);
         VetRecord updatedVetRecord = vetRecordService.update(vetRecord);
