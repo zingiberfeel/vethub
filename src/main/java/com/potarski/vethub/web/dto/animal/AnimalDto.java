@@ -35,3 +35,4 @@ public class AnimalDto {
 
     private List<VetRecord> vetRecords;
 }
+
