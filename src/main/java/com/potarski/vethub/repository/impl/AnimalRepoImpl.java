@@ -6,6 +6,7 @@ import com.potarski.vethub.repository.AnimalRepo;
 import com.potarski.vethub.repository.DataSourceConfig;
 import com.potarski.vethub.repository.mappers.AnimalRowMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

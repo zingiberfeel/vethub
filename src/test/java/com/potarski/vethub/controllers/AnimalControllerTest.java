@@ -1,6 +1,7 @@
 package com.potarski.vethub.controllers;
 
 import com.potarski.vethub.domain.animal.Animal;
+import com.potarski.vethub.domain.exception.ResourceNotFoundException;
 import com.potarski.vethub.domain.user.Role;
 import com.potarski.vethub.domain.user.User;
 import com.potarski.vethub.repository.UserRepo;
@@ -13,6 +14,7 @@ import com.potarski.vethub.web.mappers.VetRecordMapperImpl;
 import com.potarski.vethub.web.security.JwtEntity;
 import com.potarski.vethub.web.security.JwtEntityFactory;
 import com.potarski.vethub.web.security.expression.CustomSecurityExpression;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,7 +27,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -36,6 +38,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -62,30 +65,48 @@ public class AnimalControllerTest {
     @MockBean
     UserRepo userRepo;
 
+    static JwtEntity jwtEntity;
+
+
+    @BeforeAll
+    public static void init() {
+        var user = User.builder().id(1L).username("test").password("test").passwordConfirmation("test").roles(Collections.singleton(Role.ROLE_USER)).build();
+        jwtEntity = JwtEntityFactory.create(user);
+    }
+
+
     @BeforeEach
     public void setUp() {
         var animal = new Animal(1L, "test", "test", LocalDate.now(), new ArrayList<>());
 
         Mockito
-                .doReturn(animal)
-                .when(animalService)
-                .getById(1L);
+            .doReturn(animal)
+            .when(animalService)
+            .getById(1L);
 
         Mockito
-                .doReturn(true)
-                .when(userService)
-                .isAnimalOwner(anyLong(), eq(1L));
+            .doThrow(ResourceNotFoundException.class)
+            .when(animalService)
+            .getById(2L);
+
+
+        Mockito
+            .doReturn(true)
+            .when(userService)
+            .isAnimalOwner(anyLong(), eq(1L));
+
+        Mockito
+            .doReturn(true)
+            .when(userService)
+            .isAnimalOwner(anyLong(), eq(1L));
     }
 
     @Test
     public void getById() {
-        var user = User.builder().id(1L).username("test").password("test").passwordConfirmation("test").roles(Collections.singleton(Role.ROLE_USER)).build();
-        JwtEntity jwtEntity = JwtEntityFactory.create(user);
-
         Long userId = 123L;
         Long animalId = 1L;
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                jwtEntity, "password");
+            jwtEntity, "password");
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 
@@ -102,17 +123,21 @@ public class AnimalControllerTest {
     @Test
     public void getByIdMvcUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/animals/1"))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @WithMockUser(roles = "USER", username = "user")
-    // @AuthenticationPrincipal
     public void getByIdMvc() throws Exception {
-        mockMvc.perform(get("/api/v1/animals/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id", equalTo(1)));
+        mockMvc.perform(get("/api/v1/animals/1").with(user(jwtEntity)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(jsonPath("$.id", equalTo(1)));
+    }
+
+    @Test
+    public void getByIdMvcNotFound() throws Exception {
+        mockMvc.perform(get("/api/v1/animals/2").with(user(jwtEntity)))
+            .andExpect(status().isNotFound());
     }
 
 
