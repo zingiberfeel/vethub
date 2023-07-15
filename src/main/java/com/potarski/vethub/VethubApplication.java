@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class VethubApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(VethubApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(VethubApplication.class, args);
+    }
 
 }

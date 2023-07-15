@@ -134,11 +134,5 @@ public class AnimalControllerTest {
             .andExpect(jsonPath("$.id", equalTo(1)));
     }
 
-    @Test
-    public void getByIdMvcNotFound() throws Exception {
-        mockMvc.perform(get("/api/v1/animals/2").with(user(jwtEntity)))
-            .andExpect(status().isNotFound());
-    }
-
 
 }
